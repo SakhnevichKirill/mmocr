@@ -1,29 +1,45 @@
 _base_ = [
     '_base_dbnet_resnet50-dcnv2_fpnc.py',
-    '../_base_/default_runtime.py',
+    '../_base_/custom_runtime.py',
     '../_base_/datasets/synthtext.py',
-    '../_base_/schedules/schedule_sgd_100k.py',
+    '../_base_/datasets/icdar2015.py',
+    # '../_base_/schedules/schedule_sgd_100k.py',
+    '../_base_/schedules/schedule_sgd_1200e.py',
 ]
 
 # dataset settings
-synthtext_textdet_train = _base_.synthtext_textdet_train
-synthtext_textdet_train.pipeline = _base_.train_pipeline
-synthtext_textdet_test = _base_.synthtext_textdet_test
-synthtext_textdet_test.pipeline = _base_.test_pipeline
+# train_dataset = _base_.synthtext_textdet_train
+# train_dataset.pipeline = _base_.train_pipeline
+# test_dataset = _base_.icdar2015_textdet_test
+# test_dataset.pipeline = _base_.test_pipeline
+
+# # List of training datasets
+train_list = [_base_.synthtext_textdet_train] 
+# List of testing datasets
+test_list = [
+    _base_.icdar2015_textdet_test
+]
+
+# # Use ConcatDataset to combine the datasets in the list
+train_dataset = dict(
+       type='ConcatDataset', datasets=train_list, pipeline=_base_.train_pipeline)
+test_dataset = dict(
+       type='ConcatDataset', datasets=test_list, pipeline=_base_.test_pipeline)
+
 
 train_dataloader = dict(
     batch_size=16,
     num_workers=8,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
-    dataset=synthtext_textdet_train)
+    dataset=train_dataset)
 
 val_dataloader = dict(
     batch_size=1,
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
-    dataset=synthtext_textdet_test)
+    dataset=test_dataset)
 
 test_dataloader = val_dataloader
 

@@ -5,6 +5,22 @@ _base_ = [
     '../_base_/schedules/schedule_sgd_1200e.py',
 ]
 
+# Save checkpoints every 10 epochs, and only keep the latest checkpoint
+default_hooks = dict(
+    checkpoint=dict(
+        type='CheckpointHook',
+        interval=10,
+        max_keep_ckpts=1,
+    )
+)
+
+# Set the maximum number of epochs to 400, and validate the model every 10 epochs
+train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=400, val_interval=10)
+# Fix learning rate as a constant
+param_scheduler = [
+    dict(type='ConstantLR', factor=1.0),
+]
+
 # dataset settings
 icdar2015_textdet_train = _base_.icdar2015_textdet_train
 icdar2015_textdet_train.pipeline = _base_.train_pipeline

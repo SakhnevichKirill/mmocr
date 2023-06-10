@@ -2,7 +2,10 @@ _base_ = [
     'dbnetpp_resnet50-dcnv2_fpnc_1200e_icdar2015.py',
 ]
 
-load_from = None
+load_from = 'https://download.openmmlab.com/mmocr/textdet/dbnetpp/dbnetpp_resnet50_fpnc_1200e_icdar2015/dbnetpp_resnet50_fpnc_1200e_icdar2015_20221025_185550-013730aa.pth'
+
+# Set the maximum number of epochs to 400, and validate the model every 1 epochs
+_base_.train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=400, val_interval=1)
 
 _base_.model.backbone = dict(
     type='mmdet.ResNet',
@@ -15,8 +18,20 @@ _base_.model.backbone = dict(
     style='pytorch',
     init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50'))
 
-_base_.train_dataloader.num_workers = 24
+
+
+batch_size = 8
+num_workers = 16
+
+_base_.train_dataloader.batch_size=batch_size
+_base_.train_dataloader.num_workers = num_workers
+
+_base_.auto_scale_lr.base_batch_size = batch_size
 _base_.optim_wrapper.optimizer.lr = 0.003
+
+
+_base_.val_dataloader.num_workers = num_workers
+_base_.test_dataloader.num_workers = num_workers
 
 param_scheduler = [
     dict(type='LinearLR', end=200, start_factor=0.001),

@@ -39,6 +39,7 @@ train_pipeline = [
         with_polygon=True,
         with_label=True,
     ),
+    dict(type='FixInvalidPolygon'),
     dict(
         type='TorchVisionWrapper',
         op='ColorJitter',
