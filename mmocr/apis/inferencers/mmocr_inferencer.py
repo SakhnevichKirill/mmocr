@@ -312,12 +312,14 @@ class MMOCRInferencer(BaseMMOCRInferencer):
                                self)._get_chunk_data(ori_inputs, batch_size)
         results = {'predictions': [], 'visualization': []}
         for ori_input in track(chunked_inputs, description='Inference'):
+            ts = datetime.now()
             preds = self.forward(
                 ori_input,
                 det_batch_size=det_batch_size,
                 rec_batch_size=rec_batch_size,
                 kie_batch_size=kie_batch_size,
                 **forward_kwargs)
+            print("Time: ", datetime.now()- ts)
             visualization = self.visualize(
                 ori_input, preds, img_out_dir=img_out_dir, **visualize_kwargs)
             batch_res = self.postprocess(

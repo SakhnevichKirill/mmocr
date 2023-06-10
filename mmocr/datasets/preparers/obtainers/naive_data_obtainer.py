@@ -188,7 +188,13 @@ class NaiveDataObtainer:
                 for f in glob.glob(src):
                     if not osp.exists(
                             osp.join(dst, osp.relpath(f, self.data_root))):
-                        shutil.move(f, dst)
+                        try:
+                            shutil.move(f, dst)
+                        except shutil.Error as e:
+                            print(e)
+                            pass
+
+                        
 
             elif osp.exists(src) and not osp.exists(dst):
                 mkdir_or_exist(osp.dirname(dst))

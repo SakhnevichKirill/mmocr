@@ -77,7 +77,6 @@ class VisualizationHook(Hook):
         # There is no guarantee that the same batch of images
         # is visualized for each evaluation.
         total_curr_iter = runner.iter + batch_idx
-
         # Visualize only the first data
         if total_curr_iter % self.interval == 0:
             for output in outputs:
@@ -109,22 +108,31 @@ class VisualizationHook(Hook):
             outputs (Sequence[:obj:`TextDetDataSample` or
                 :obj:`TextRecogDataSample`]): Outputs from model.
         """
-
         if self.enable is False:
             return
 
-        for output in outputs:
-            img_path = output.img_path
-            img_bytes = fileio.get(img_path, backend_args=self.backend_args)
-            img = mmcv.imfrombytes(img_bytes, channel_order='rgb')
+        total_curr_iter = runner.iter + batch_idx
+        if total_curr_iter % self.interval == 0:
+            for output in outputs:
+                img_path = output.img_path
+                img_bytes = fileio.get(img_path, backend_args=self.backend_args)
+                img = mmcv.imfrombytes(img_bytes, channel_order='rgb')
 
-            self._visualizer.add_datasample(
-                osp.splitext(osp.basename(img_path))[0],
-                img,
-                data_sample=output,
-                show=self.show,
-                draw_gt=self.draw_gt,
-                draw_pred=self.draw_pred,
-                wait_time=self.wait_time,
-                pred_score_thr=self.score_thr,
-                step=batch_idx)
+                # data = runner.model.data_preprocessor(data_batch, False)
+                # feat = runner.model._run_forward(data, mode='tensor')
+                # drawn_img = self._visualizer.draw_featmap(feat, img, channel_reduction='select_max')
+                # # self._visualizer.show(drawn_img)
+                # self._visualizer.add_datasample(
+                #                 osp.splitext(osp.basename(img_path))[0],
+                #                 drawn_img,)
+
+                self._visualizer.add_datasample(
+                    osp.splitext(osp.basename(img_path))[0],
+                    img,
+                    data_sample=output,
+                    show=self.show,
+                    draw_gt=self.draw_gt,
+                    draw_pred=self.draw_pred,
+                    wait_time=self.wait_time,
+                    pred_score_thr=self.score_thr,
+                    step=batch_idx)
