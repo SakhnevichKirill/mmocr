@@ -77,6 +77,7 @@ class VisualizationHook(Hook):
         # There is no guarantee that the same batch of images
         # is visualized for each evaluation.
         total_curr_iter = runner.iter + batch_idx
+
         # Visualize only the first data
         if total_curr_iter % self.interval == 0:
             for output in outputs:
@@ -108,6 +109,7 @@ class VisualizationHook(Hook):
             outputs (Sequence[:obj:`TextDetDataSample` or
                 :obj:`TextRecogDataSample`]): Outputs from model.
         """
+
         if self.enable is False:
             return
 
