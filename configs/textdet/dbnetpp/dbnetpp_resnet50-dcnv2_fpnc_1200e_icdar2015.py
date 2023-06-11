@@ -14,10 +14,12 @@ load_from = 'https://download.openmmlab.com/mmocr/textdet/dbnetpp/tmp_1.0_pretra
 # test_list = [_base_.icdar2015_textdet_test]
 
 # # List of training datasets
-train_list = [_base_.icdar2015_textdet_train, _base_.synthtext_textdet_train] 
+train_list = [_base_.icdar2015_textdet_train, _base_.synthtext_textdet_train]
 # List of testing datasets
 val_list = [
+    _base_.icdar2015_textdet_train,
     _base_.icdar2015_textdet_test,
+    _base_.synthtext_textdet_train,
     _base_.synthtext_textdet_test
 ]
 
@@ -40,7 +42,8 @@ train_dataloader = dict(
     persistent_workers=True,
     pin_memory=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
-    dataset=train_dataset)
+    dataset=train_dataset
+)
 
 val_dataloader = dict(
     batch_size=1,
