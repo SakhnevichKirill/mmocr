@@ -19,13 +19,18 @@ train_list = [_base_.icdar2015_textdet_train, _base_.synthtext_textdet_train]
 val_list = [
     _base_.icdar2015_textdet_train,
     _base_.icdar2015_textdet_test,
-    _base_.synthtext_textdet_train,
+    # _base_.synthtext_textdet_train,
     _base_.synthtext_textdet_test
 ]
 
 
 val_evaluator = dict(
-    dataset_prefixes=['icdar2015', 'synthtext']
+    dataset_prefixes=[
+        'icdar2015_train', 
+        'icdar2015',
+        # 'synthtext_train',
+        'synthtext'
+    ]
 )
 test_evaluator = val_evaluator
 

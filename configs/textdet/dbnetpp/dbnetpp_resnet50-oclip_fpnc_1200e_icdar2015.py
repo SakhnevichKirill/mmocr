@@ -6,7 +6,7 @@ load_from = 'https://download.openmmlab.com/mmocr/textdet/dbnetpp/dbnetpp_resnet
 # resume = True
 
 # Set the maximum number of epochs to 400, and validate the model every 1 epochs
-_base_.train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=150, val_interval=1)
+_base_.train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=20, val_interval=1)
 
 _base_.model.backbone = dict(
     type='CLIPResNet',
@@ -23,7 +23,7 @@ _base_.train_dataloader.batch_size=batch_size
 _base_.train_dataloader.num_workers = num_workers
 
 _base_.auto_scale_lr.base_batch_size = batch_size
-_base_.optim_wrapper.optimizer.lr = 0.002
+_base_.optim_wrapper.optimizer.lr = 0.001
 
 
 _base_.val_dataloader.num_workers = num_workers
@@ -32,8 +32,8 @@ _base_.test_dataloader.num_workers = num_workers
 
 
 param_scheduler = [
-    dict(type='LinearLR', end=10, start_factor=0.001),
-    dict(type='PolyLR', power=0.9, eta_min=1e-7, begin=10, end=150),
+    dict(type='LinearLR', end=3, start_factor=0.001),
+    dict(type='PolyLR', power=2, eta_min=1e-7, begin=3, end=40),
 ]
 
 
